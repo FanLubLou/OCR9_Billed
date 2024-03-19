@@ -145,9 +145,19 @@ export default class {
       this.counter ++
     }
 
+    // Issue 4
+
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
+      $(`#open-bill${bill.id}`).off('click').on('click', (e) => {
+          this.handleEditTicket(e, bill, bills);
+      });
+    });
+
+
+    // Ancien code
+    // bills.forEach(bill => {
+    //   $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+    // })
 
     return bills
 
