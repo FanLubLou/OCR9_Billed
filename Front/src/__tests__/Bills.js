@@ -36,5 +36,12 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
     })
+      
+     // Vérifie que le titre et le bouton sont bien affichés
+    test('Then title and button should be displayed', () => {
+        document.body.innerHTML = BillsUI({ data: [] })
+        expect(screen.getAllByText("Mes notes de frais")).toBeTruthy()
+        expect(screen.getByTestId("btn-new-bill")).toBeTruthy()
+    }); 
   })
 })
