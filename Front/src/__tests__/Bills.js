@@ -4,6 +4,9 @@
 //Import de fireEvent pour le scenario 6
 import {screen, waitFor, fireEvent} from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
+//import { getBills } from "../containers/Bills.js"
+import { formatStatus } from "../app/format.js"
+import { formatDate } from "../app/format.js"
 import { bills } from "../fixtures/bills.js"
 //Import de Bills pour le scenario 6
 import Bills from "../containers/Bills.js"
@@ -45,14 +48,16 @@ describe("Given I am connected as an employee", () => {
       //On vérifie que l'icone soit bien surligné
       expect(windowIcon).toHaveClass('active-icon');
 
-    })
-    test("Then bills should be ordered from earliest to latest", () => {
-      document.body.innerHTML = BillsUI({ data: bills.sort((a, b) => ((a.date < b.date) ? 1 : -1)) })
-      const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
-      const antiChrono = (a, b) => ((a < b) ? 1 : -1)
-      const datesSorted = [...dates].sort(antiChrono)
-      expect(dates).toEqual(datesSorted)
-    })
+    });
+            // Vérifie le tri par date (du plus récent au plus ancien)
+            test("Then bills should be ordered from earliest to latest", () => {
+              document.body.innerHTML = BillsUI({ data: bills.sort((a, b) => ((a.date < b.date) ? 1 : -1)) })
+              const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
+              const antiChrono = (a, b) => ((a < b) ? 1 : -1)
+              const datesSorted = [...dates].sort(antiChrono)
+              expect(dates).toEqual(datesSorted)
+          });
+    
       
     // Scenario 5: Vérifie que le titre et le bouton sont bien affichés
     test('Then title and button should be displayed', () => {
@@ -140,7 +145,6 @@ describe("Given I am connected as an employee", () => {
 
 //Scenario 8
 //On vérifie qu'une page approriée s'affiche lors de l'echec avec une erreur 404 de la récupération des factures depuis l'API
-
 describe("Given I am a user connected as Employee", () => {
   describe("When fetch bills from API fail", () => {
       //On espionne ici la méthode bills de l'objet mockstore à chaque appel.
@@ -148,7 +152,7 @@ describe("Given I am a user connected as Employee", () => {
           jest.spyOn(mockStore, "bills")           
       })
       // Vérifie que l'erreur 404 est bien affichée
-      test("Then, ErrorPage should be rendered", async () => {
+      test("Then, ErrorPage should be rendered with 404 error message", async () => {
         //On configure cii le comportement de la méthode bills de l'objet mockStore lorsque cette méthode est appelée. 
         // On simule un échec de récupération des factures en rejetant une promesse avec un message d'erreur "Erreur 404"
           mockStore.bills.mockImplementationOnce(() => ({
