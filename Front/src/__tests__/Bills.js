@@ -143,7 +143,7 @@ describe("Given I am connected as an employee", () => {
   })
 });
 
-//Scenario 8
+//Scenario 8 & scenario 9
 //On vérifie qu'une page approriée s'affiche lors de l'echec avec une erreur 404 de la récupération des factures depuis l'API
 describe("Given I am a user connected as Employee", () => {
   describe("When fetch bills from API fail", () => {
@@ -151,6 +151,7 @@ describe("Given I am a user connected as Employee", () => {
       beforeEach(() => {
           jest.spyOn(mockStore, "bills")           
       })
+      //Scenario 8 
       // Vérifie que l'erreur 404 est bien affichée
       test("Then, ErrorPage should be rendered with 404 error message", async () => {
         //On configure cii le comportement de la méthode bills de l'objet mockStore lorsque cette méthode est appelée. 
@@ -163,5 +164,18 @@ describe("Given I am a user connected as Employee", () => {
         //On vérifie si le texte "Erreur 404" est bien présent dans la page
           expect(screen.getByText(/Erreur 404/)).toBeTruthy();
       });
+    // Scenario 9
+    // Vérifie que l'erreur 500 est bien affichée
+    test("Then, ErrorPage should be rendered", async () => {
+      // On configure cii le comportement de la méthode bills de l'objet mockStore lorsque cette méthode est appelée. 
+      // On simule un échec de récupération des factures en rejetant une promesse avec un message d'erreur "Erreur 500"      
+      mockStore.bills.mockImplementationOnce(() => ({
+          return: () => Promise.reject(new Error("Erreur 500"))
+      }));
+      // On injecte le HTML grâce à BillsUI
+      document.body.innerHTML = BillsUI({ error: "Erreur 500" });
+      //On vérifie si le texte "Erreur 500" est bien présent dans la page
+      expect(screen.getByText(/Erreur 500/)).toBeTruthy();
+  });    
    });
 });

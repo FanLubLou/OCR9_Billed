@@ -4,7 +4,6 @@ import Logout from "./Logout.js"
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
     // Initialisation des propriétés de l'instance avec les paramètres passés au constructeur
-    
     this.document = document
     this.onNavigate = onNavigate
     this.store = store
@@ -43,7 +42,7 @@ export default class NewBill {
     const fileExtension = fileName.split('.').pop().toLowerCase()
     if (!allowedExtensions.includes(fileExtension)) {
       alert('Le fichier doit être au format JPG, JPEG ou PNG.')
-      fileInput.value = '' // Effacer le champ de fichier pour éviter de soumettre le fichier invalide
+      e.target.value = '' // Effacer le champ de fichier pour éviter de soumettre le fichier invalide
       return
     }
 
